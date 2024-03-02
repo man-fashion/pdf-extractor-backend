@@ -31,9 +31,10 @@ def upload_file_to_s3(file, bucket_name, acl="public-read"):
         # This is a catch all exception, edit this part to fit your needs.
         print("Something Happened: ", e)
         return e
-
-    return "{}{}".format(os.environ.get("Bucket_Name"), file.filename)
-
+  # return the public url of the file
+    s3_url = f"https://{bucket_name}.s3.amazonaws.com/{file.filename}"
+    return (s3_url)
+6
 def delete_file_from_s3(bucket_name, s3_file_name):
     s3 = boto3.client(
        "s3",
