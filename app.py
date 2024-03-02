@@ -19,6 +19,7 @@ def upload_file():
             file = request.files["file"]
             bucket_name = os.environ.get("Bucket_Name")
             output = upload_file_to_s3(file, bucket_name)
+            
             return jsonify({'message': 'File uploaded successfully', 'url': output})
 
 if __name__ == '__main__':
