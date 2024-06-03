@@ -1,22 +1,13 @@
 import io
-import os
-import re
-import string
-from PyPDF2 import PdfReader
-import pandas as pd
-from datetime import datetime,date
-from dateutil import relativedelta
 from pdfminer.converter import TextConverter
 from pdfminer.pdfinterp import PDFPageInterpreter
 from pdfminer.pdfinterp import PDFResourceManager
 from pdfminer.layout import LAParams
 from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfparser import PDFSyntaxError
-import json
 import tika
 from tika import parser
-import dateparser
-import fitz
+import pymupdf as fitz
 
 def extract_text_from_pdf(cv_path):
     if not isinstance(cv_path, io.BytesIO):
