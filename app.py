@@ -6,6 +6,7 @@ from flask_cors import CORS
 from utils.s3Operations import upload_file_to_s3, delete_file_from_s3, get_bucket_contents
 from parser_1 import process_pdf_data
 import requests
+import datetime
 from utils.storedata import store_data, group_addresses_by_pincode, group_similar_addresses
 
 app = Flask(__name__)
@@ -18,10 +19,10 @@ def download_pdf(url, save_path="user_bill.pdf"):
     if response.status_code == 200:
         with open(save_path, 'wb') as f:
             f.write(response.content)
-        print("PDF downloaded successfully")
+        print(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} PDF ",url," downloaded successfully to ",save_path)
         return True
     else:
-        print("Failed to download PDF. Status code:", response.status_code)
+        print(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Failed to download PDF",url,". Status code:", response.status_code)
         return False
 
 
@@ -35,6 +36,7 @@ def upload_file():
         if request.files:
             file = request.files["file"]
             bucket_name = os.environ.get("Bucket_Name")
+            print(bucket_name)
             output = upload_file_to_s3(file, bucket_name)
             
             return jsonify({'message': 'File uploaded successfully', 'url': output})
@@ -47,7 +49,6 @@ def get_details():
         url = data.get('url')
         filename = "user_bill.pdf"
         res = download_pdf(url)
-
         if res==True:
             data = process_pdf_data(filename)
             for items in data:
@@ -55,7 +56,7 @@ def get_details():
                 try:
                     store_data(items)
                 except Exception as e:
-                    print("An error occurred while storing data:", e)
+                    print(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} An error occurred while storing data:", e)
 
             os.remove(filename)
             return jsonify({"response":True,'message': 'Data Added successfully'})

@@ -36,14 +36,14 @@ def upload_file_to_s3(file, bucket_name, acl="public-read", max_size_mb=10):
 
     except Exception as e:
         # Handle upload errors
-        print("Something Happened: ", e)
+        print("Something Happened: ", e, e.with_traceback)
         return str(e)
 
     # Return the public URL of the uploaded file
     s3_url = f"https://{bucket_name}.s3.amazonaws.com/{file.filename}"
     return s3_url
 
-6
+
 def delete_file_from_s3(bucket_name, s3_file_name):
     s3 = boto3.client(
        "s3",
