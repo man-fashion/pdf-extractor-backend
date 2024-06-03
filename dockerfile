@@ -27,4 +27,4 @@ COPY . .
 EXPOSE 5050
 
 # Define the command to run the application
-CMD ["python", "app.py"]
+CMD ["/app/scripts/start.sh"]

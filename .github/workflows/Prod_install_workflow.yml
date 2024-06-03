@@ -95,7 +95,7 @@ jobs:
         
             #Load and run new Docker image
             docker load -i /home/${{ secrets.AZURE_VM_USERNAME }}/man_fashion_image.tar/man_fashion_image.tar
-            docker run -d -p 5050:5050 --name manfashion_container man_fashion_image:latest
+            docker run -d -p 5050:5050 --cpus="0.5" -m="512m" --name manfashion_container man_fashion_image:latest
         
             #Cleanup old Docker images
             docker rmi $(docker images -q --filter "dangling=true")
