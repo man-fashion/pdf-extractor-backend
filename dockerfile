@@ -26,5 +26,9 @@ COPY . .
 # Expose the port the app runs on
 EXPOSE 5050
 
-# Define the command to run the application
-CMD ["/app/scripts/start.sh"]
+# Grant execute permissions to the entrypoint script
+RUN chmod +x /app/scripts/start.sh
+
+# Set the entrypoint
+ENTRYPOINT ["/app/scripts/start.sh"]
+
