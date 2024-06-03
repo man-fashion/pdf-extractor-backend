@@ -6,10 +6,10 @@
 ##
 
 # Use the official Python Alpine image from the Docker Hub
-FROM python:3.12.3-slim
+FROM python:3.9.6-slim
 
 # Install only the necessary tools
-#RUN apt-get update && apt-get install -y gcc 
+RUN apt-get update && apt-get install -y gcc 
 
 # Set the working directory in the container
 WORKDIR /app
@@ -22,9 +22,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code into the container
 COPY . .
-
-#COPY .env .env
-
 
 # Expose the port the app runs on
 EXPOSE 5050
