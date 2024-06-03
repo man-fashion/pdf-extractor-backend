@@ -34,6 +34,7 @@ jobs:
       
       - name: Create env file
         run: |
+              cd /home/runner/work/pdf-extractor-backend/pdf-extractor-backend
               echo "MONGO_URI='${{ secrets.MONGO_URI }}'" >> .env
               echo "Bucket_Name=${{ secrets.Bucket_Name }}" >> .env
               echo "aws_access_key_id=${{ secrets.Access_key_ID }}" >> .env
@@ -44,7 +45,9 @@ jobs:
       
       - name: Echo current path after creating .env file
         run: |
+          cd /home/runner/work/pdf-extractor-backend/pdf-extractor-backend
           echo "Current path after creating .env file: $(pwd)"
+          ls -lart
 
               
       - name: Verify Docker Version and build arch //Our end server is using ARM64
@@ -64,6 +67,7 @@ jobs:
         id: build-docker-step
         run: 
           |
+          cd /home/runner/work/pdf-extractor-backend/pdf-extractor-backend
           docker build -t man_fashion_image:latest .
           docker save man_fashion_image:latest -o man_fashion_image.tar
      
