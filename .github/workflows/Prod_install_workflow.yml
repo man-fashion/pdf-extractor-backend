@@ -34,11 +34,11 @@ jobs:
       
       - name: Create env file
         run: |
-              echo "MONGO_URI='${{ secrets.MONGO_URI }}'" >> .env
-              echo "Bucket_Name=${{ secrets.Bucket_Name }}" >> .env
-              echo "aws_access_key_id=${{ secrets.Access_key_ID }}" >> .env
-              echo "aws_secret_access_key='${{ secrets.Secret_access_key }}'" >> .env
-              echo "region_name='${{ secrets.AWS_REGION }}'" >> .env
+              echo "MONGO_URI='${{ secrets.MONGO_URI }}'" >> /tmp/.env
+              echo "Bucket_Name=${{ secrets.Bucket_Name }}" >> /tmp/.env
+              echo "aws_access_key_id=${{ secrets.Access_key_ID }}" >> /tmp/.env
+              echo "aws_secret_access_key='${{ secrets.Secret_access_key }}'" >> /tmp/.env
+              echo "region_name='${{ secrets.AWS_REGION }}'" >> /tmp/.env
               
       - name: Verify Docker Version and build arch //Our end server is using ARM64
         run: docker version --format '{{.Server.Version}}'
