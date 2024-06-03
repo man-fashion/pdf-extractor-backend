@@ -3,7 +3,6 @@ name: PROD - Build & Deploy ManFashion Backend to AWS
 on:
   push:
     branches:
-      - action_setup
       - main
   workflow_dispatch:
 
