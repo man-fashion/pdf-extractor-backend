@@ -8,6 +8,7 @@ from pdfminer.pdfparser import PDFSyntaxError
 import tika
 from tika import parser
 import pymupdf as fitz
+import datetime
 
 def extract_text_from_pdf(cv_path):
     if not isinstance(cv_path, io.BytesIO):
@@ -70,6 +71,8 @@ def extract_text_from_pdf(cv_path):
             return
 
 def extract_text(file_path,ext):
+    print(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Start extract text pdf - Method")
+
     if ext == 'pdf':
         # text = ''
         # pages = 0
@@ -95,6 +98,9 @@ def extract_text(file_path,ext):
             return text,pages
         except Exception:
             return text,pages
+        finally:
+            print(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} End extract text pdf - Method")
+
 
     else:
         tika.TikaClientOnly = True
@@ -103,8 +109,11 @@ def extract_text(file_path,ext):
             return parsed['content'],parsed['metadata']['xmpTPg:NPages']            # pylint: disable=E1136
         except TypeError:
             return parsed['content'],0
+        finally:
+            print(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} End extract text pdf - Method")
         
 def process_pdf_data(pdf_path, pick_up_service_list=["Delhivery", "Xpress Bees", "Pickup", "Ecom Express"]):
+    print(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Start process pdf - Method")
     text = extract_text(pdf_path, "pdf")
     bill_text_list = text[0].split("\nCOD")
     res = []
@@ -154,6 +163,7 @@ def process_pdf_data(pdf_path, pick_up_service_list=["Delhivery", "Xpress Bees",
                     "pincode": "NA"
                 }
                 res.append(address_dict)
+    print(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} End process pdf - Method")
 
     return res
         
