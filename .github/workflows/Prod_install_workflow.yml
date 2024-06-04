@@ -37,9 +37,9 @@ jobs:
               cd /home/runner/work/pdf-extractor-backend/pdf-extractor-backend
               echo "MONGO_URI='${{ secrets.MONGO_URI }}'" >> .env
               echo "Bucket_Name='${{ secrets.Bucket_Name }}'" >> .env
-              echo "aws_access_key_id='${{ secrets.Access_key_ID }}'" >> .env
-              echo "aws_secret_access_key='${{ secrets.Secret_access_key }}'" >> .env
-              echo "region_name='${{ secrets.AWS_REGION }}'" >> .env
+              echo "Access_key_ID='${{ secrets.Access_key_ID }}'" >> .env
+              echo "Secret_access_key='${{ secrets.Secret_access_key }}'" >> .env
+              echo "AWS_REGION='${{ secrets.AWS_REGION }}'" >> .env
               echo pwd
 
       
