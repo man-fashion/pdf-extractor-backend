@@ -1,8 +1,10 @@
 #!/bin/bash
 
-# Load environment variables from .env file
-chmod 777 /app/.env
-source /app/.env
+# Start the Flask application
+flask run --host=0.0.0.0 --port=5050 &
 
-# Start your Python Application
-python app.py
+# Start the Celery worker
+celery -A tasks.celery worker --loglevel=info &
+
+# Wait for both background processes to finish
+wait

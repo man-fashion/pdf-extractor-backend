@@ -9,6 +9,8 @@ import tika
 from tika import parser
 import pymupdf as fitz
 import datetime
+from utils.storedata import store_data
+import os
 
 def extract_text_from_pdf(cv_path):
     if not isinstance(cv_path, io.BytesIO):
@@ -163,8 +165,13 @@ def process_pdf_data(pdf_path, pick_up_service_list=["Delhivery", "Xpress Bees",
                     "pincode": "NA"
                 }
                 res.append(address_dict)
-    print(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} End process pdf - Method")
+    
 
-    return res
+
+    for item in res:
+        store_data(item)
+
+    os.remove(pdf_path)
+    print(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} End process pdf - Method")
         
 
