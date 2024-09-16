@@ -3,6 +3,7 @@ import jsonschema
 from bson import json_util
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import datetime
 import os
 
 MONGO_URI=os.environ.get("MONGO_URI")
@@ -31,13 +32,17 @@ schema = {
 }
 
 def store_data(data):
+    print(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - start store data - Method")
     try:
         jsonschema.validate(data, schema)
         collection.insert_one(data)
     except jsonschema.exceptions.ValidationError as e:
-        print("Data validation failed. Error:", e)
+        print(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Data validation failed. Error:", e)
     except Exception as e:
-        print("An error occurred while storing data:", e)
+        print(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} An error occurred while storing data:", e)
+    finally:
+        print(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - End store data - Method")
+
 
 def get_address_vectors(addresses):
     # Combine address, city, state, and pincode into a single string
@@ -52,7 +57,7 @@ def get_address_vectors(addresses):
 # get all the data from db and store it into list. now in that list check where the pincode is same and then for all such adreses create a list map it with that particular pincode and create a dict
 
 def group_addresses_by_pincode():
-    print("function called")
+    print(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - group_address_by_pincode function called")
     data = list(collection.find())
     pincode_map = {}
     for address in data:
