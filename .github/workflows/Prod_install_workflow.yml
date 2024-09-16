@@ -87,6 +87,11 @@ jobs:
           username: ${{ secrets.AZURE_VM_USERNAME }}
           key: ${{ secrets.AZURE_VM_PRIVATE_KEY }}
           script: |
+           # Check if port 5050 is in use
+           if lsof -i:5050 -t > /dev/null; then
+              echo "Error: Port 5050 is already in use. Exiting."
+              exit 1
+            fi
             #Stop and remove old container if exists
             if [ $(docker ps -q -f name=manfashion_container) ]; then
               docker stop manfashion_container

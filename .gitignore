@@ -1,4 +1,7 @@
 .env
+*.pyc
+myenv/
+*.cfg
 venv
 .venv
 *.pyc
