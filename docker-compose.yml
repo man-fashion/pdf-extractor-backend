@@ -15,9 +15,17 @@ services:
     command: bash -c "chmod +x /app/scripts/start.sh && /app/scripts/start.sh"
     depends_on:
       - redis
+    networks:
+      - app-network
 
   redis:
     image: redis:alpine
     container_name: redis
     ports:
       - "6379:6379"
+    networks:
+      - app-network
+
+  networks:
+  app-network:
+    driver: bridge
