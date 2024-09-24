@@ -15,17 +15,19 @@ services:
     command: bash -c "chmod +x /app/scripts/start.sh && /app/scripts/start.sh"
     depends_on:
       - redis
-    networks:
-      - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'  # Limit CPU usage to 50%
+          memory: 500M   # Limit memory to 500 MB
 
   redis:
     image: redis:alpine
     container_name: redis
     ports:
       - "6379:6379"
-    networks:
-      - app-network
-
-  networks:
-  app-network:
-    driver: bridge
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'  # Limit CPU usage to 50%
+          memory: 500M   # Limit memory to 500 MB
