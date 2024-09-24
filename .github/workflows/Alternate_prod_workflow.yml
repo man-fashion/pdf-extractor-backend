@@ -8,10 +8,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
-    if: true  # This will enable the job from running
+  checkout-and-setup:
     runs-on: ubuntu-latest
-    name: Build, Package, and Deploy Backend
+    name: Checkout Repository and Setup Environment
     environment: Dev
     permissions:
       id-token: write
@@ -22,8 +21,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install jq
-        run: |
-          sudo apt-get install -y jq
+        run: sudo apt-get install -y jq
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -31,27 +29,60 @@ jobs:
             aws-access-key-id: ${{ secrets.Access_key_ID }}
             aws-secret-access-key: ${{ secrets.Secret_access_key }}
             aws-region: ${{ secrets.AWS_REGION }}
-      
+
+  build-docker-image:
+    runs-on: ubuntu-latest
+    name: Build Docker Image
+    needs: checkout-and-setup
+  
+    steps:
       - name: Verify Docker Version
         run: docker version --format '{{.Server.Version}}'
 
       - name: Install Docker Buildx
         run: |
-              mkdir -p ~/.docker/cli-plugins
-              curl -SL https://github.com/docker/buildx/releases/download/v0.7.1/buildx-v0.7.1.linux-amd64 -o ~/.docker/cli-plugins/docker-buildx
-              chmod a+x ~/.docker/cli-plugins/docker-buildx
+          mkdir -p ~/.docker/cli-plugins
+          curl -SL https://github.com/docker/buildx/releases/download/v0.7.1/buildx-v0.7.1.linux-amd64 -o ~/.docker/cli-plugins/docker-buildx
+          chmod a+x ~/.docker/cli-plugins/docker-buildx
           
       - name: Set up QEMU
         if: runner.os != 'Linux'
         run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-          
-      - name: Build Docker Image and ensure success
+
+      - name: Build Docker Image
         id: build-docker-step
         run: |
           cd /home/runner/work/pdf-extractor-backend/pdf-extractor-backend
           docker build -t man_fashion_image:latest .
 
-      - name: SSH and deploy using docker-compose
+  package-and-upload-image:
+    runs-on: ubuntu-latest
+    name: Package and Upload Docker Image
+    needs: build-docker-image
+  
+    steps:
+      - name: Save Docker Image as an Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: man_fashion_image
+          path: /home/runner/work/pdf-extractor-backend/pdf-extractor-backend
+
+  deploy-docker-image:
+    runs-on: ubuntu-latest
+    name: Deploy Docker Image to Azure VM
+    needs: package-and-upload-image
+    environment: Dev
+    permissions:
+      id-token: write
+      contents: read
+    
+    steps:
+      - name: Download Docker Image Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: man_fashion_image
+
+      - name: SSH and Deploy Using Docker Compose
         uses: appleboy/ssh-action@v0.1.5
         with:
           host: ${{ secrets.AZURE_VM_HOST }}
@@ -73,10 +104,25 @@ jobs:
             # Stop and remove existing containers if they exist
             docker-compose down
 
+            # Load the Docker image
+            docker load -i man_fashion_image.tar
+
             # Run docker-compose to start services
             docker-compose up -d
 
-            # Clean up dangling images
+  cleanup-dangling-images:
+    runs-on: ubuntu-latest
+    name: Cleanup Dangling Docker Images
+    needs: deploy-docker-image
+    
+    steps:
+      - name: SSH and Cleanup Dangling Images
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.AZURE_VM_HOST }}
+          username: ${{ secrets.AZURE_VM_USERNAME }}
+          key: ${{ secrets.AZURE_VM_PRIVATE_KEY }}
+          script: |
             dangling_images=$(docker images -q --filter "dangling=true")
             if [ -n "$dangling_images" ]; then
               docker rmi $dangling_images
