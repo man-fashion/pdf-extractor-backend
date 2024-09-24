@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - main
-      - action_setup
   workflow_dispatch:
 
 jobs:
   build-and-deploy:
+    if: false  # This will disable the job from running
     runs-on: ubuntu-latest
     name: Build, Package, and Deploy Backend
     environment: Dev

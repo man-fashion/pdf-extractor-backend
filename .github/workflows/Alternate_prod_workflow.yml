@@ -1,0 +1,80 @@
+name: PROD - Build & Deploy ManFashion Backend to AWS
+
+on:
+  push:
+    branches:
+      - main
+      - action_setup
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    if: true  # This will enable the job from running
+    runs-on: ubuntu-latest
+    name: Build, Package, and Deploy Backend
+    environment: Dev
+    permissions:
+      id-token: write
+      contents: read
+  
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install jq
+        run: |
+          sudo apt-get install -y jq
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+            aws-access-key-id: ${{ secrets.Access_key_ID }}
+            aws-secret-access-key: ${{ secrets.Secret_access_key }}
+            aws-region: ${{ secrets.AWS_REGION }}
+      
+      - name: Verify Docker Version
+        run: docker version --format '{{.Server.Version}}'
+
+      - name: Install Docker Buildx
+        run: |
+              mkdir -p ~/.docker/cli-plugins
+              curl -SL https://github.com/docker/buildx/releases/download/v0.7.1/buildx-v0.7.1.linux-amd64 -o ~/.docker/cli-plugins/docker-buildx
+              chmod a+x ~/.docker/cli-plugins/docker-buildx
+          
+      - name: Set up QEMU
+        if: runner.os != 'Linux'
+        run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+          
+      - name: Build Docker Image and ensure success
+        id: build-docker-step
+        run: |
+          cd /home/runner/work/pdf-extractor-backend/pdf-extractor-backend
+          docker build -t man_fashion_image:latest .
+
+      - name: SSH and deploy using docker-compose
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.AZURE_VM_HOST }}
+          username: ${{ secrets.AZURE_VM_USERNAME }}
+          key: ${{ secrets.AZURE_VM_PRIVATE_KEY }}
+          script: |
+            cd /home/personalwork1109/pdf-extractor-backend
+
+            # Pull latest changes from the repository
+            git pull origin main
+
+            # Create the .env file on the server
+            echo "MONGO_URI='${{ secrets.MONGO_URI }}'" > .env
+            echo "Bucket_Name='${{ secrets.Bucket_Name }}'" >> .env
+            echo "Access_key_ID='${{ secrets.Access_key_ID }}'" >> .env
+            echo "Secret_access_key='${{ secrets.Secret_access_key }}'" >> .env
+            echo "AWS_REGION='${{ secrets.AWS_REGION }}'" >> .env
+
+            # Stop and remove existing containers if they exist
+            docker-compose down
+
+            # Run docker-compose to start services
+            docker-compose up -d
+
+            # Clean up dangling images
+            docker rmi $(docker images -q --filter "dangling=true")
