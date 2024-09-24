@@ -60,20 +60,20 @@ jobs:
             cd /home/personalwork1109/pdf-extractor-backend
 
             # Pull latest changes from the repository
-            sudo git pull origin main
+            git pull origin main
 
             # Create the .env file on the server
-            sudo echo "MONGO_URI='${{ secrets.MONGO_URI }}'" > .env
-            sudo echo "Bucket_Name='${{ secrets.Bucket_Name }}'" >> .env
-            sudo echo "Access_key_ID='${{ secrets.Access_key_ID }}'" >> .env
-            sudo echo "Secret_access_key='${{ secrets.Secret_access_key }}'" >> .env
-            sudo echo "AWS_REGION='${{ secrets.AWS_REGION }}'" >> .env
+            echo "MONGO_URI='${{ secrets.MONGO_URI }}'" > .env
+            echo "Bucket_Name='${{ secrets.Bucket_Name }}'" >> .env
+            echo "Access_key_ID='${{ secrets.Access_key_ID }}'" >> .env
+            echo "Secret_access_key='${{ secrets.Secret_access_key }}'" >> .env
+            echo "AWS_REGION='${{ secrets.AWS_REGION }}'" >> .env
 
             # Stop and remove existing containers if they exist
-            sudo docker-compose down
+            docker-compose down
 
             # Run docker-compose to start services
-            sudo docker-compose up -d
+            docker-compose up -d
 
             # Clean up dangling images
-            sudo docker rmi $(docker images -q --filter "dangling=true")
+            docker rmi $(docker images -q --filter "dangling=true")
