@@ -1,4 +1,4 @@
-name: PROD - Build & Deploy ManFashion Backend to AWS
+name: Disabled - PROD - Build & Deploy ManFashion Backend to AWS
 
 on:
   push:
