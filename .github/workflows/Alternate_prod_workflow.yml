@@ -9,6 +9,7 @@ on:
 
 jobs:
   build-and-deploy:
+    if: true  # This will enable the job from running
     runs-on: ubuntu-latest
     name: Build, Package, and Deploy Backend
     environment: Dev
