@@ -192,3 +192,4 @@ def extract_qty(pdf_text):
     return random.randint(1, 10)  # Return a random quantity if no match is found
 
 
+
