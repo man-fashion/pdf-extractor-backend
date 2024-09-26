@@ -12,4 +12,4 @@ scikit_learn==1.5.0
 tika==2.6.0
 celery
 redis
-
+spacy

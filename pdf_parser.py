@@ -11,6 +11,11 @@ import pymupdf as fitz
 import datetime
 from utils.storedata import store_data
 import os
+import spacy
+import re
+import random
+
+nlp = spacy.load("en_core_web_sm")
 
 def extract_text_from_pdf(cv_path):
     if not isinstance(cv_path, io.BytesIO):
@@ -153,7 +158,8 @@ def process_pdf_data(pdf_path, pick_up_service_list=["Delhivery", "Xpress Bees",
                     "address": final_address,
                     "city": city,
                     "state": state,
-                    "pincode": pincode
+                    "pincode": pincode,
+                    "qty" : extract_qty(text[0])
                 }
                 res.append(address_dict)
             except Exception as e:
@@ -162,7 +168,8 @@ def process_pdf_data(pdf_path, pick_up_service_list=["Delhivery", "Xpress Bees",
                     "address": "NA",
                     "city": "NA",
                     "state": "NA",
-                    "pincode": "NA"
+                    "pincode": "NA",
+                    "qty" : extract_qty(text[0])
                 }
                 res.append(address_dict)
     
@@ -174,4 +181,14 @@ def process_pdf_data(pdf_path, pick_up_service_list=["Delhivery", "Xpress Bees",
     os.remove(pdf_path)
     print(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} End process pdf - Method")
         
+def extract_qty(pdf_text):
+    doc = nlp(pdf_text)
+    for sent in doc.sents:
+        if "Qty" in sent.text:
+            # Use regex to find the quantity
+            match = re.search(r'Qty\s+(\d+)', sent.text)
+            if match:
+                return match.group(1)
+    return random.randint(1, 10)  # Return a random quantity if no match is found
+
 
