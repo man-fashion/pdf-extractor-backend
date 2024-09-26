@@ -11,10 +11,12 @@ from celery_config import make_celery
 
 
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024
 app.config.update(
     CELERY_BROKER_URL='redis://redis:6379/0',
     CELERY_RESULT_BACKEND='redis://redis:6379/0'
 )
+
 
 celery = make_celery(app)
 CORS(app)
