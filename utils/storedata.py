@@ -27,7 +27,7 @@ schema = {
             ]
         },
         "state": {"type": "string"},
-        # "qty": {"type": "integer"}
+        "qty": {"type": "integer"}
 
     },
     "required": ["Name", "address", "city", "pincode", "state"]
