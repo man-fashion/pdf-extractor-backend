@@ -18,8 +18,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1.5'  # Limit CPU usage to 50%
-          memory: 1.5G   # Limit memory to 500 MB
+          cpus: '3'  # Limit CPU usage to 50%
+          memory: 3G   # Limit memory to 500 MB
 
   redis:
     image: redis:alpine
