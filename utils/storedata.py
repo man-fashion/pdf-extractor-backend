@@ -50,6 +50,8 @@ def get_address_vectors(addresses):
     # Combine address, city, state, and pincode into a single string
     combined_addresses = [' '.join([address['address'], address['city'], address['state'], address['pincode']]) for address in addresses]
 
+    if not any(combined_addresses):
+        return None
     # Vectorize the combined addresses
     vectorizer = TfidfVectorizer()
     address_vectors = vectorizer.fit_transform(combined_addresses)
@@ -83,6 +85,10 @@ def group_similar_addresses(threshold=0.7):
     addresses = list(collection.find())
 
     address_vectors = get_address_vectors(addresses)
+
+    if address_vectors is None:
+        return {}
+    
     similarity_matrix = cosine_similarity(address_vectors)
     grouped_addresses = {}
 

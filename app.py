@@ -69,12 +69,18 @@ def get_details():
 
 @app.route('/get-addresses-by-pincode', methods=['GET'])
 def get_addresses_by_pincode():
-    return jsonify(group_addresses_by_pincode())
+    try :
+        return jsonify(group_addresses_by_pincode())
+    except Exception as e:
+        return jsonify({'message': 'An error occurred while fetching addresses by pincode', 'error': str(e)})
 
 # create a route to get similar addresses
 @app.route('/get-similar-addresses', methods=['GET'])
 def get_similar_addresses():
-    return jsonify(group_similar_addresses())
+    try :
+        return jsonify(group_similar_addresses())
+    except Exception as e:
+        return jsonify({'message': 'An error occurred while fetching similar addresses', 'error': str(e)})
 
 
 if __name__ == '__main__':
