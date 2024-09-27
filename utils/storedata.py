@@ -26,7 +26,9 @@ schema = {
                 {"type": "string", "pattern": "^NA$"}
             ]
         },
-        "state": {"type": "string"}
+        "state": {"type": "string"},
+        "qty": {"type": "integer"}
+
     },
     "required": ["Name", "address", "city", "pincode", "state"]
 }
