@@ -18,4 +18,5 @@ COPY . .
 EXPOSE 5050
 
 # Set the entrypoint and ensure the script is executable
-ENTRYPOINT ["sh", "-c", "chmod +x /app/scripts/start.sh && /app/scripts/start.sh"]
+ENTRYPOINT ["sh", "-c", "chmod +x /app/scripts/start.sh && /app/scripts/start.sh"]  
+#sh -c ./scripts/start.sh
