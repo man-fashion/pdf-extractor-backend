@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 services:
   app:
@@ -18,8 +18,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '3'  # Limit CPU usage to 50%
-          memory: 3G   # Limit memory to 500 MB
+          cpus: "1" # Limit CPU usage to 50%
+          memory: 3G # Limit memory to 500 MB
 
   redis:
     image: redis:alpine
@@ -29,5 +29,5 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.30'  # Limit CPU usage to 50%
-          memory: 200M   # Limit memory to 500 MB
+          cpus: "0.50" # Limit CPU usage to 50%
+          memory: 500M # Limit memory to 500 MB
