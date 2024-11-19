@@ -8,12 +8,12 @@ jobs:
     steps:
     - name: Set up SSH Key
       run: |
-        mkdir -p ~/.ssh                          # Create the .ssh directory
-        echo "${{ secrets.AZURE_VM_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa                  # Ensure correct permissions for the private key
+        mkdir -p /tmp/.ssh                          # Create the .ssh directory
+        echo "${{ secrets.AZURE_VM_PRIVATE_KEY }}" > /tmp/.ssh/id_rsa
+        chmod 600 /tmp/.ssh/id_rsa                  # Ensure correct permissions for the private key
 
     - name: Debug SSH Connection
-      run: ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -v azureuser@4.240.89.209 whoami
+      run: ssh -i /tmp/.ssh/id_rsa -o StrictHostKeyChecking=no -v a2266@srmist.edu.in@4.240.89.209 whoami
 
     
     - name: executing remote ssh commands using ssh key
