@@ -13,7 +13,7 @@ jobs:
         chmod 600 ~/.ssh/id_rsa                  # Ensure correct permissions for the private key
 
     - name: Debug SSH Connection
-      run: ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USERNAME }}@${{ secrets.AZURE_VM_HOST }} whoami
+      run: ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no a2266@srmist.edu.in@$4.240.89.209 whoami
 
     
     - name: executing remote ssh commands using ssh key
