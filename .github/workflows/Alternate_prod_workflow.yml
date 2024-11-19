@@ -58,7 +58,7 @@ jobs:
           username: ${{ secrets.AZURE_VM_USERNAME }}
           key: ${{ secrets.AZURE_VM_PRIVATE_KEY }}
           script: |
-            cd /home/personalwork1109/pdf-extractor-backend
+            cd /home/sa2266/pdf-extractor-backend
 
             # Pull latest changes from the repository
             git pull origin main
