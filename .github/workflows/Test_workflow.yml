@@ -6,6 +6,12 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+    
+    - name: Save private key
+      run: |
+        echo "${{ secrets.AZURE_VM_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+    
     - name: executing remote ssh commands using ssh key
       uses: appleboy/ssh-action@v1.2.0
       with:
